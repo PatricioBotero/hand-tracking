@@ -1,11 +1,15 @@
 from numpy import *
 from numpy.random import *
+from pylab import *
+from itertools import izip
+import time
+import cv2
 
 
 def resample(weights):
   n = len(weights)
   indices = []
-  C = [0.] + [sum(weights[:i+1]) for i in range(n)]
+  C = [0.] + [sum(weights[:i+1]) for i in range(n)]     # cumsum
   u0, j = random(), 0
   for u in [(u0+i)/n for i in range(n)]:
     while u > C[j]:
@@ -30,10 +34,10 @@ def particlefilter(sequence, pos, stepsize, n):
       x  = x[resample(w),:]                     # Resample particles according to weights
       
 if __name__ == "__main__":
-  from pylab import *
-  from itertools import izip
-  import time
+  
   ion()
+  
+  ''' create image sequence '''
   seq = [ im for im in zeros((20,240,320), int)]      # Create an image sequence of 20 frames long
   x0 = array([120, 160])                              # Add a square with starting position x0 moving along trajectory xs
   xs = vstack((arange(20)*3, arange(20)*2)).T + x0
@@ -41,13 +45,16 @@ if __name__ == "__main__":
     xslice = slice(x[0]-8, x[0]+8)
     yslice = slice(x[1]-8, x[1]+8)
     seq[t][xslice, yslice] = 255
+    
 
+  ''' the filter part '''
   for im, p in izip(seq, particlefilter(seq, x0, 8, 100)): # Track the square through the sequence
     pos, xs, ws = p
     position_overlay = zeros_like(im)
     position_overlay[tuple(pos)] = 1
     particle_overlay = zeros_like(im)
     particle_overlay[tuple(xs.T)] = 1
+    
     hold(True)
     draw()
     time.sleep(0.3)

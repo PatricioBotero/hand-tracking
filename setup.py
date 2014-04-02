@@ -18,7 +18,7 @@ setup(
     license = "BSD",
     keywords = "tracking, particle filter, webcam",
     url = "",
-    packages=['src', 'tests'],
+    packages=['src', 'test'],
     long_description=read('README'),
     classifiers=[
         "Development Status :: 3 - Alpha",
