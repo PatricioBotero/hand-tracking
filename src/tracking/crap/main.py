@@ -10,7 +10,7 @@ from pylab import *
 from itertools import izip
 import time
 import cv2
-from src.ch.hslu.hand.particle_filter import resample
+from tracking.crap.particle_filter import resample
 
 
 
