@@ -1,2 +1,3 @@
-test project for tracking a hand on the webcam
+hand-tracking
 =========
+test project for tracking a hand on the webcam
