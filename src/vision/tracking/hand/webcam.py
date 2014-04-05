@@ -6,7 +6,6 @@ Created on 02.04.2014
 
 import cv2
 
-
 camera = cv2.VideoCapture(0)
 
 def captureRefImage():

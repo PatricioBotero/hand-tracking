@@ -23,3 +23,5 @@ class A:
         
     def set_a(self, a):
         self.a = a
+        
+        
