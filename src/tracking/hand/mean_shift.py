@@ -83,7 +83,7 @@ while 1:
     
         # calculate p
         p = rgbPDF(frame, y1, w_halfsize, redBins, greenBins, blueBins)
-        
+         
         # calculate w
         n = 1
         for i in range(rmin, rmax):
