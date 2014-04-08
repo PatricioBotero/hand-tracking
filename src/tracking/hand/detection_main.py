@@ -9,11 +9,16 @@ from numpy.random import *
 from pylab import *
 from itertools import izip
 import time
-import cv2
 
 from tracking.hand.histogram_operations import *
 from tracking.hand.particle_filter import *
-from tracking.hand.webcam import *
+import tracking.hand.webcam as webcam
+
+
+def normalizeVector():
+    sumWeights = np.sum(weights)
+    for i in range(N):
+        weights[i] = weights[i] / sumWeights
 
 dt = 1;
 updateMatrix = np.array([[1,0, 1, 0],
@@ -29,12 +34,9 @@ Xstd_pos = 40;
 Xstd_vec = 20; 
 N = 250; 
 
-
-
-
-refImage = captureRefImage()
-refHist = getRefHistogram(refImage, bbsize, center)
-dim_y, dim_x = refImage.shape[:2]
+refImage, refImage_hsv = webcam.captureRefImage()
+refHist = getRefHistogram(refImage_hsv, bbsize, center)
+dim_y, dim_x = refImage_hsv.shape[:2]
 
 X = np.vstack( (np.random.random_integers(bbsize, dim_y-bbsize, size=(1.,N)), 
     np.random.random_integers(bbsize, dim_x-bbsize, size=(1.,N)), 
@@ -46,8 +48,7 @@ while True:
     X[:2,:] = X[:2,:] + Xstd_pos * (np.random.random_sample((2, N))*2-1)
     X[2:4,:] = X[2:4,:] + Xstd_vec * (np.random.random_sample((2, N))*2-1)
 
-    retval, frame = camera.read()
-    framehsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    frame, framehsv = webcam.get_frame()
     
     weights = []
     for p in range(N):
@@ -67,7 +68,7 @@ while True:
             weights.append(0)
             
         ''' show particle '''
-        cv2.circle(frame, (np.int(X[1,p]), np.int(X[0,p])), 4, (0,255,0), -1)
+        cv2.circle(frame, (np.int(X[1,p]), np.int(X[0,p])), 1, (0,255,0), -1)
         print ('velocity ', X[2:4,p])
          
     # drawing
